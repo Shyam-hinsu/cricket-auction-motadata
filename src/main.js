@@ -19,13 +19,21 @@ import { faArrowsUpDownLeftRight } from "@fortawesome/free-solid-svg-icons";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faSquarePlus } from "@fortawesome/free-solid-svg-icons";
+import { faDiceD20 } from "@fortawesome/free-solid-svg-icons";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faGroupArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
   faUserSecret,
   faArrowsUpDownLeftRight,
   faTrash,
   faCirclePlus,
-  faSquarePlus
+  faSquarePlus,
+  faDiceD20,
+  faStar,
+  faUsers,
+  faGroupArrowsRotate
 );
 
 Vue.component("font-awesome-icon", FontAwesomeIcon);

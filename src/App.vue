@@ -19,11 +19,23 @@
             >
           </div>
 
-          <font-awesome-icon
+          <!-- <font-awesome-icon
             icon="fa-solid fa-square-plus"
             class="color-primary text-5xl cursor-pointer"
             @click="tglToadd = true"
-          />
+          /> -->
+          <div class="flex flex-col h-full justify-between">
+            <font-awesome-icon
+              icon="fa-solid fa-users"
+              class="color-primary text-3xl cursor-pointer self-start"
+              @click="showTeamInformation('All Players')"
+            />
+            <font-awesome-icon
+              icon="fa-solid fa-group-arrows-rotate"
+              class="color-primary text-3xl cursor-pointer self-start"
+              @click="showTeamInformation('unselect')"
+            />
+          </div>
         </div>
 
         <input v-model="search" class="p-1 input mt-4" />
@@ -64,7 +76,7 @@
           </div>
         </div>
       </div>
-      <div style="width: 75%; height: 100%" class="p-4">
+      <div style="width: 75%; height: 100%" class="p-1">
         <div class="flex justify-between w-full">
           <h1 class="color-primary font-bold">Teams</h1>
           <font-awesome-icon
@@ -73,8 +85,8 @@
           />
         </div>
 
-        <div class="w-full h-full overflow-auto">
-          <div
+        <div class="w-full overflow-auto" style="height: 97%">
+          <!-- <div
             :style="{
               display: 'grid',
               'grid-auto-rows': 'minmax(300px, max-content)',
@@ -103,6 +115,122 @@
                 Remaining Points : 500
               </div>
             </div>
+          </div> -->
+          <div class="justify-center items-center flex m-4" style="height: 30%">
+            <div
+              class="rounded-lg input flex flex-col items-center justify-center text-neutral-500 text-slate-500 item-container h-full w-4/12"
+              style="border-style: dashed !important"
+              @dblclick="showTeamInformation(teams[0].name)"
+              @dragover="allowDropSeries($event, teams[0].name)"
+            >
+              <div
+                class="w-full h-full flex flex-col items-center justify-center"
+                @drop="dropSeries($event, teams[0].name)"
+              >
+                TEAM {{ teams[0].name }}
+                <br />
+                Drag Player
+                <br />
+                Total Points : 5000
+                <br />
+                Remaining Points : 500
+              </div>
+            </div>
+          </div>
+          <div
+            class="justify-between items-center flex m-4"
+            style="height: 30%"
+          >
+            <div
+              class="rounded-lg input flex flex-col items-center justify-center text-neutral-500 text-slate-500 item-container h-full w-4/12"
+              style="border-style: dashed !important"
+              @dblclick="showTeamInformation(teams[1].name)"
+              @dragover="allowDropSeries($event, teams[1].name)"
+            >
+              <div
+                class="w-full h-full flex flex-col items-center justify-center"
+                @drop="dropSeries($event, teams[1].name)"
+              >
+                TEAM {{ teams[1].name }}
+                <br />
+                Drag Player
+                <br />
+                Total Points : 5000
+                <br />
+                Remaining Points : 500
+              </div>
+            </div>
+            <div class="bg-primary glow rounded-3xl p-2 pl-1 cursor-pointer">
+              <!-- style="height: 60%; width: 10%" -->
+
+              <!-- <img src="dice.svg" class="glow"  /> -->
+              <font-awesome-icon
+                icon="fa-solid fa-dice-d20"
+                class="text-9xl glow"
+                style="color: rgb(17, 17, 17)"
+                @click="isOpenPlayerSeletionModel = !isOpenPlayerSeletionModel"
+              />
+            </div>
+
+            <div
+              class="rounded-lg input flex flex-col items-center justify-center text-neutral-500 text-slate-500 item-container h-full w-4/12"
+              style="border-style: dashed !important"
+              @dblclick="showTeamInformation(teams[2].name)"
+              @dragover="allowDropSeries($event, teams[2].name)"
+            >
+              <div
+                class="w-full h-full flex flex-col items-center justify-center"
+                @drop="dropSeries($event, teams[2].name)"
+              >
+                TEAM {{ teams[2].name }}
+                <br />
+                Drag Player
+                <br />
+                Total Points : 5000
+                <br />
+                Remaining Points : 500
+              </div>
+            </div>
+          </div>
+          <div class="justify-evenly items-center flex m-4" style="height: 30%">
+            <div
+              class="rounded-lg input flex flex-col items-center justify-center text-neutral-500 text-slate-500 item-container h-full w-4/12"
+              style="border-style: dashed !important"
+              @dblclick="showTeamInformation(teams[3].name)"
+              @dragover="allowDropSeries($event, teams[3].name)"
+            >
+              <div
+                class="w-full h-full flex flex-col items-center justify-center"
+                @drop="dropSeries($event, teams[3].name)"
+              >
+                TEAM {{ teams[3].name }}
+                <br />
+                Drag Player
+                <br />
+                Total Points : 5000
+                <br />
+                Remaining Points : 500
+              </div>
+            </div>
+            <div
+              class="rounded-lg input flex flex-col items-center justify-center text-neutral-500 text-slate-500 item-container h-full w-4/12"
+              style="border-style: dashed !important"
+              @dblclick="showTeamInformation(teams[4].name)"
+              @dragover="allowDropSeries($event, teams[4].name)"
+            >
+              <div
+                class="w-full h-full flex flex-col items-center justify-center"
+                @drop="dropSeries($event, teams[4].name)"
+              >
+                TEAM {{ teams[4].name }}
+                <br />
+                Drag Player
+                <br />
+                Total Points : 5000
+                <br />
+                Remaining Points : 500
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -118,6 +246,13 @@
       @add-player="addpalyer"
       @close="tglToadd = false"
       :active="tglToadd"
+    />
+    <playerSelectionModel
+      :player="unsettledPlayers[0]"
+      :teams="teams"
+      :active="isOpenPlayerSeletionModel"
+      @select-player-in-team="selectPlayerInTeam"
+      @close="closePlayerSelectionModel"
     />
   </div>
 </template>
@@ -140,6 +275,7 @@ import {
 import Header from "./components/Header.vue";
 import playerListModel from "./components/PlayerListModel.vue";
 import PlayerForm from "./components/playerForm.vue";
+import playerSelectionModel from "./components/playerSelectionModel.vue";
 
 export default {
   name: "App",
@@ -147,9 +283,27 @@ export default {
     Header,
     playerListModel,
     PlayerForm,
+    playerSelectionModel,
   },
 
   data() {
+    this.teams = [
+      {
+        name: "one",
+      },
+      {
+        name: "two",
+      },
+      {
+        name: "three",
+      },
+      {
+        name: "four",
+      },
+      {
+        name: "five",
+      },
+    ];
     return {
       search: "",
       dragedPlayer: undefined,
@@ -158,8 +312,20 @@ export default {
       notesCollectionRef: undefined,
 
       getNotesSnapshots: undefined,
-      players: [],
+      players: [
+        // { id: 1, name: "shyam", point: 500, star: 1 },
+        // { id: 2, name: "hinsu", point: 500, star: 2 },
+        // { id: 3, name: "mukesh", point: 500, star: 3 },
+        // { id: 4, name: "jika", point: 500, star: 4 },
+        // { id: 5, name: "jinu", point: 500, star: 3 },
+        // { id: 6, name: "jin", point: 500, star: 1 },
+      ],
       tglToadd: false,
+      formOpen: true,
+      value7: "",
+      options: 1,
+      abandonPlayer: [],
+      isOpenPlayerSeletionModel: false,
     };
   },
   created() {
@@ -276,15 +442,44 @@ export default {
         ...this.players.slice(index + 1),
       ];
     },
+    selectPlayerInTeam(data) {
+      let index = this.players.findIndex((item) => item.id === data.id);
+      this.players = [
+        ...this.players.slice(0, index),
+        {
+          ...this.players[index],
+          team: data.team,
+          point: Number(data.point),
+        },
+        ...this.players.slice(index + 1),
+      ];
+      this.isOpenPlayerSeletionModel = false;
+    },
+    closePlayerSelectionModel(id) {
+      let index = this.players.findIndex((item) => item.id === id);
+      this.players = [
+        ...this.players.slice(0, index),
+        {
+          ...this.players[index],
+          team: "unselect",
+        },
+        ...this.players.slice(index + 1),
+      ];
+
+      this.isOpenPlayerSeletionModel = false;
+    },
   },
   computed: {
-    unselectedPlayers() {
+    unsettledPlayers() {
       return this.players.filter((player) => player.team === undefined);
+    },
+    unselectedPlayers() {
+      return this.players.filter((player) => player.team === "unselect");
     },
     totalPlayerPoints() {
       return this.players.reduce((acc, player) => {
         if (player.point) {
-          return acc + player.point;
+          return acc + Number(player.point);
         } else {
           return acc;
         }
@@ -292,17 +487,44 @@ export default {
     },
     usedPlayerPoints() {
       return this.players.reduce((acc, player) => {
-        if (player.team !== undefined && player.point) {
-          return acc + player.point;
+        if (
+          player.team !== undefined &&
+          player.team !== "unselect" &&
+          player.point
+        ) {
+          return acc + Number(player.point);
         } else {
           return acc;
         }
       }, 0);
     },
     filteredPlayers() {
-      return this.unselectedPlayers.filter((player) => {
+      return this.unsettledPlayers.filter((player) => {
         return player.name.toLowerCase().includes(this.search.toLowerCase());
       });
+    },
+  },
+  watch: {
+    unsettledPlayers(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        if (newValue.length === 0 && this.unselectedPlayers.length) {
+          this.players.forEach((player) => {
+            if (player.team === "unselect") {
+              let index = this.players.findIndex(
+                (item) => item.id === player.id
+              );
+              this.players = [
+                ...this.players.slice(0, index),
+                {
+                  ...this.players[index],
+                  team: undefined,
+                },
+                ...this.players.slice(index + 1),
+              ];
+            }
+          });
+        }
+      }
     },
   },
 };
@@ -363,5 +585,39 @@ export default {
 }
 .color-primary {
   color: #1373ab;
+}
+
+.bg-primary {
+  background-color: #1373ab;
+}
+
+.glow {
+  animation: glow 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 10px -10px #1373abb3;
+  }
+  to {
+    box-shadow: 0 0 10px 10px #1373abb3;
+  }
+}
+
+.con-image {
+  border-radius: inherit;
+}
+
+.con-image img {
+  display: block;
+  position: relative;
+  border-radius: inherit;
+  max-width: 350px;
+}
+
+.img-container {
+  width: 300px;
+  height: 300px;
+  float: left;
 }
 </style>

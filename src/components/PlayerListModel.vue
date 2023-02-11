@@ -17,8 +17,8 @@
         <template #thead>
           <vs-tr>
             <vs-th sort> Name </vs-th>
-            <vs-th sort> team </vs-th>
-            <vs-th sort> point </vs-th>
+            <vs-th sort> Team </vs-th>
+            <vs-th sort> Point </vs-th>
             <vs-th v-if="teamDetailsFor !== 'All Players'"> </vs-th>
           </vs-tr>
         </template>
