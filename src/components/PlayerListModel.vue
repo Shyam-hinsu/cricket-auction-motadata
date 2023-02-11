@@ -6,15 +6,10 @@
     full-screen
     v-model="open"
     @close="closeModel"
-    style="
-       {
-        background-color: rgb(17, 17, 17);
-      }
-    "
   >
     <template #header>
       <h4 class="not-margin">
-        <b>Team {{ teamDetailsFor }}</b>
+        <b> {{ teamDetailsFor }}</b>
       </h4>
     </template>
     <div class="center examplex">
@@ -24,7 +19,7 @@
             <vs-th sort> Name </vs-th>
             <vs-th sort> team </vs-th>
             <vs-th sort> point </vs-th>
-            <vs-th> </vs-th>
+            <vs-th v-if="teamDetailsFor !== 'All Players'"> </vs-th>
           </vs-tr>
         </template>
         <template #tbody>
@@ -38,7 +33,7 @@
             <vs-td>
               {{ player.point }}
             </vs-td>
-            <vs-td>
+            <vs-td v-if="teamDetailsFor !== 'All Players'">
               <font-awesome-icon
                 icon="fa-solid fa-trash"
                 class="cursor-pointer text-red-600"
@@ -65,7 +60,7 @@ export default {
       default: undefined,
     },
     active: {
-      default: undefined,
+      default: false,
     },
   },
   data() {
@@ -75,9 +70,13 @@ export default {
   },
   computed: {
     players() {
-      return this.allPlayer.filter(
-        (player) => player.team === this.teamDetailsFor
-      );
+      if (this.teamDetailsFor !== "All Players") {
+        return this.allPlayer.filter(
+          (player) => player.team === this.teamDetailsFor
+        );
+      } else {
+        return this.allPlayer;
+      }
     },
   },
   watch: {
