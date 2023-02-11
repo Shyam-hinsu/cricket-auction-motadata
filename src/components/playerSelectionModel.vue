@@ -57,7 +57,7 @@
           <vs-button
             dark
             shadow
-            class="absolute float-right"
+            class="absolute float-right right-0"
             @click="selectPlayerInTeam"
           >
             Select Player
