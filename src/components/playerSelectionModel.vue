@@ -7,7 +7,7 @@
     v-model="open"
     @close="closeModel"
   >
-    <div style="min-height: 50vh" class="flex">
+    <div style="min-height: 50vh" class="flex" v-if="!isAllPlayerSelected">
       <div style="height: 50vh; width: 50vh">
         <img
           src="shyam.jpg"
@@ -31,13 +31,14 @@
             class="flex justify-between flex-col p-4"
           >
             <div>
-              <h1 class="text-2xl font-extrabold">{{ player.name }}</h1>
+              <h1 class="text-2xl font-extrabold">{{ (player || {}).name }}</h1>
               <h4 class="text-2xl font-bold">Wickets: 10</h4>
               <h4 class="text-2xl font-bold">Runs: 10</h4>
             </div>
 
             <div class="flex">
               <vs-select
+                v-if="!isDraged"
                 placeholder="Select Team"
                 v-model="formData.team"
                 class="mr-4"
@@ -51,6 +52,7 @@
                   {{ team.name }}
                 </vs-option>
               </vs-select>
+              <h1 v-else>{{ player.team }}</h1>
               <vs-input v-model="formData.point" placeholder="Point" />
             </div>
           </div>
@@ -64,6 +66,16 @@
           </vs-button>
         </div>
       </div>
+    </div>
+
+    <div
+      v-else
+      style="min-height: 50vh; width: 80vh"
+      class="justify-center items-center bg-sky-200 flex rounded-2xl"
+    >
+      <h1 class="text-4xl font-extrabold color-primary">
+        All Players Are Selected
+      </h1>
     </div>
   </vs-dialog>
 </template>
@@ -82,13 +94,19 @@ export default {
     player: {
       type: Object,
     },
+    isAllPlayerSelected: {
+      type: Boolean,
+    },
+    isDraged: {
+      type: Boolean,
+    },
   },
   data() {
     return {
       open: false,
       formData: {
         team: "",
-        point: 500,
+        point: (this.player || {}).point,
         id: (this.player || {}).id,
       },
     };
@@ -106,20 +124,28 @@ export default {
   },
   methods: {
     closeModel() {
-      this.$emit("close", this.player.id);
+      this.$emit("close", (this.player || {}).id);
       this.formData = {
         team: "",
-        point: 500,
+        point: "",
         id: (this.player || {}).id,
       };
     },
     selectPlayerInTeam() {
-      if (this.formData.team !== "" && this.formData.point) {
-        this.$emit("select-player-in-team", this.formData);
+      // eslint-disable-next-line
+      debugger;
+      if (
+        (this.formData.team !== "" || this.player.team) &&
+        this.formData.point
+      ) {
+        this.$emit("select-player-in-team", {
+          id: this.player.id,
+          team: !this.isDraged ? this.formData.team : this.player.team,
+          point: this.formData.point,
+        });
         this.formData = {
           team: "",
-          point: 500,
-          id: (this.player || {}).id,
+          point: "",
         };
       }
     },
@@ -127,4 +153,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.color-primary {
+  color: #1373ab;
+}
+</style>

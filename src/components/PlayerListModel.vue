@@ -37,7 +37,7 @@
               <font-awesome-icon
                 icon="fa-solid fa-trash"
                 class="cursor-pointer text-red-600"
-                @click="removeFromTeam(player.name)"
+                @click="removeFromTeam(player.id)"
               />
             </vs-td>
           </vs-tr>
@@ -94,8 +94,8 @@ export default {
     closeModel() {
       this.$emit("close");
     },
-    removeFromTeam(playerName) {
-      this.$emit("remove-from-team", playerName);
+    removeFromTeam(id) {
+      this.$emit("remove-from-team", id);
     },
   },
 };

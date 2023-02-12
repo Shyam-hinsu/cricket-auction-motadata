@@ -19,11 +19,11 @@
             >
           </div>
 
-          <!-- <font-awesome-icon
+          <font-awesome-icon
             icon="fa-solid fa-square-plus"
             class="color-primary text-5xl cursor-pointer"
             @click="tglToadd = true"
-          /> -->
+          />
           <div class="flex flex-col h-full justify-between">
             <font-awesome-icon
               icon="fa-solid fa-users"
@@ -248,9 +248,11 @@
       :active="tglToadd"
     />
     <playerSelectionModel
-      :player="unsettledPlayers[0]"
+      :player="dragedPlayer ? dragedPlayer : unsettledPlayers[0]"
+      :isDraged="!!dragedPlayer"
       :teams="teams"
       :active="isOpenPlayerSeletionModel"
+      :isAllPlayerSelected="isAllPlayerSelected"
       @select-player-in-team="selectPlayerInTeam"
       @close="closePlayerSelectionModel"
     />
@@ -266,7 +268,7 @@ import {
   onSnapshot,
   doc,
   setDoc,
-  // updateDoc,
+  updateDoc,
   deleteDoc,
   query,
   orderBy,
@@ -352,12 +354,14 @@ export default {
         (querySnapshot) => {
           let players = [];
           querySnapshot.forEach((doc) => {
+            console.log();
             let player = {
-              id: doc.data().id,
+              id: doc.id,
               name: doc.data().name,
               point: doc.data().point,
               run: doc.data().run,
               wicket: doc.data().point,
+              team: doc.data().team,
             };
             players.unshift(player);
           });
@@ -374,7 +378,6 @@ export default {
       debugger;
 
       await setDoc(doc(this.notesCollectionRef, uuidv4()), {
-        id: uuidv4(),
         name: data.name,
       }).finally(() => {
         this.tglToadd = false;
@@ -386,8 +389,6 @@ export default {
     },
 
     showTeamInformation(t) {
-      // eslint-disable-next-line
-      debugger;
       this.teamDetailsFor = t;
       this.active = true;
     },
@@ -401,14 +402,14 @@ export default {
       );
     },
     dragEnd() {
-      this.dragedPlayer = undefined;
+      // this.dragedPlayer = undefined;
     },
     dropSeries(e, t) {
       if (this.dragedPlayer) {
         e.preventDefault();
 
         let index = this.players.findIndex(
-          (item) => item.name === this.dragedPlayer.name
+          (item) => item.id === this.dragedPlayer.id
         );
         this.players = [
           ...this.players.slice(0, index),
@@ -418,6 +419,12 @@ export default {
           },
           ...this.players.slice(index + 1),
         ];
+
+        this.dragedPlayer = {
+          ...this.dragedPlayer,
+          team: t,
+        };
+        this.isOpenPlayerSeletionModel = true;
         e.preventDefault();
       }
     },
@@ -431,47 +438,71 @@ export default {
       this.teamDetailsFor = undefined;
     },
 
-    removeFromTeam(name) {
-      let index = this.players.findIndex((item) => item.name === name);
-      this.players = [
-        ...this.players.slice(0, index),
-        {
-          ...this.players[index],
-          team: undefined,
-        },
-        ...this.players.slice(index + 1),
-      ];
+    async removeFromTeam(id) {
+      // let index = this.players.findIndex((item) => item.name === name);
+      // this.players = [
+      //   ...this.players.slice(0, index),
+      //   {
+      //     ...this.players[index],
+      //     team: undefined,
+      //   },
+      //   ...this.players.slice(index + 1),
+      // ];
+
+      const washingtonRef = doc(this.notesCollectionRef, id);
+      await updateDoc(washingtonRef, {
+        team: null,
+      });
     },
-    selectPlayerInTeam(data) {
-      let index = this.players.findIndex((item) => item.id === data.id);
-      this.players = [
-        ...this.players.slice(0, index),
-        {
-          ...this.players[index],
-          team: data.team,
-          point: Number(data.point),
-        },
-        ...this.players.slice(index + 1),
-      ];
+    async selectPlayerInTeam(data) {
+      // eslint-disable-next-line
+      debugger;
+      // let index = this.players.findIndex((item) => item.id === data.id);
+      // this.players = [
+      //   ...this.players.slice(0, index),
+      //   {
+      //     ...this.players[index],
+      //     team: data.team,
+      //     point: Number(data.point),
+      //   },
+      //   ...this.players.slice(index + 1),
+      // ];
+
+      const washingtonRef = doc(this.notesCollectionRef, data.id);
+      await updateDoc(washingtonRef, {
+        team: data.team,
+        point: data.point,
+      });
+      this.dragedPlayer = undefined;
       this.isOpenPlayerSeletionModel = false;
     },
-    closePlayerSelectionModel(id) {
-      let index = this.players.findIndex((item) => item.id === id);
-      this.players = [
-        ...this.players.slice(0, index),
-        {
-          ...this.players[index],
-          team: "unselect",
-        },
-        ...this.players.slice(index + 1),
-      ];
+    async closePlayerSelectionModel(id) {
+      if (id) {
+        // let index = this.players.findIndex((item) => item.id === id);
+        // this.players = [
+        //   ...this.players.slice(0, index),
+        //   {
+        //     ...this.players[index],
+        //     team: "unselect",
+        //   },
+        //   ...this.players.slice(index + 1),
+        // ];
 
+        const washingtonRef = doc(this.notesCollectionRef, id);
+        await updateDoc(washingtonRef, {
+          team: "unselect",
+        });
+      }
+
+      this.dragedPlayer = undefined;
       this.isOpenPlayerSeletionModel = false;
     },
   },
   computed: {
     unsettledPlayers() {
-      return this.players.filter((player) => player.team === undefined);
+      return this.players.filter(
+        (player) => player.team === undefined || player.team === null
+      );
     },
     unselectedPlayers() {
       return this.players.filter((player) => player.team === "unselect");
@@ -487,11 +518,7 @@ export default {
     },
     usedPlayerPoints() {
       return this.players.reduce((acc, player) => {
-        if (
-          player.team !== undefined &&
-          player.team !== "unselect" &&
-          player.point
-        ) {
+        if (player.team && player.team !== "unselect" && player.point) {
           return acc + Number(player.point);
         } else {
           return acc;
@@ -503,24 +530,37 @@ export default {
         return player.name.toLowerCase().includes(this.search.toLowerCase());
       });
     },
+    isAllPlayerSelected() {
+      return (
+        !this.unsettledPlayers.length &&
+        !this.unselectedPlayers.length &&
+        !this.dragedPlayer
+      );
+    },
   },
   watch: {
     unsettledPlayers(newValue, oldValue) {
       if (newValue !== oldValue) {
         if (newValue.length === 0 && this.unselectedPlayers.length) {
-          this.players.forEach((player) => {
+          this.players.forEach(async (player) => {
             if (player.team === "unselect") {
               let index = this.players.findIndex(
                 (item) => item.id === player.id
               );
-              this.players = [
-                ...this.players.slice(0, index),
-                {
-                  ...this.players[index],
-                  team: undefined,
-                },
-                ...this.players.slice(index + 1),
-              ];
+              // this.players = [
+              //   ...this.players.slice(0, index),
+              //   {
+              //     ...this.players[index],
+              //     team: undefined,
+              //   },
+              //   ...this.players.slice(index + 1),
+              // ];
+
+              const washingtonRef = doc(this.notesCollectionRef, player.id);
+              await updateDoc(washingtonRef, {
+                ...this.players[index],
+                team: undefined,
+              });
             }
           });
         }
