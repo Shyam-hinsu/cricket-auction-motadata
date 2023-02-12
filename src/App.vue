@@ -160,13 +160,17 @@
                 Remaining Points : 500
               </div>
             </div>
-            <div class="bg-primary glow rounded-3xl p-2 pl-1 cursor-pointer">
+            <div
+              class="bg-primary rounded-3xl p-2 pl-1 cursor-pointer"
+              :class="{ glow: !isAllPlayerSelected }"
+            >
               <!-- style="height: 60%; width: 10%" -->
 
               <!-- <img src="dice.svg" class="glow"  /> -->
               <font-awesome-icon
                 icon="fa-solid fa-dice-d20"
-                class="text-9xl glow"
+                class="text-9xl"
+                :class="{ glow: !isAllPlayerSelected }"
                 style="color: rgb(17, 17, 17)"
                 @click="isOpenPlayerSeletionModel = !isOpenPlayerSeletionModel"
               />
@@ -544,9 +548,9 @@ export default {
         if (newValue.length === 0 && this.unselectedPlayers.length) {
           this.players.forEach(async (player) => {
             if (player.team === "unselect") {
-              let index = this.players.findIndex(
-                (item) => item.id === player.id
-              );
+              // let index = this.players.findIndex(
+              //   (item) => item.id === player.id
+              // );
               // this.players = [
               //   ...this.players.slice(0, index),
               //   {
@@ -558,8 +562,7 @@ export default {
 
               const washingtonRef = doc(this.notesCollectionRef, player.id);
               await updateDoc(washingtonRef, {
-                ...this.players[index],
-                team: undefined,
+                team: null,
               });
             }
           });

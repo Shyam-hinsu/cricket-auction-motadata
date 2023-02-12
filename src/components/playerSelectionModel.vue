@@ -52,7 +52,13 @@
                   {{ team.name }}
                 </vs-option>
               </vs-select>
-              <h1 v-else>{{ player.team }}</h1>
+              <h1
+                v-else
+                style="border-radius: 10px"
+                class="mr-4 p-2 bg-slate-300"
+              >
+                {{ player.team }}
+              </h1>
               <vs-input v-model="formData.point" placeholder="Point" />
             </div>
           </div>
@@ -154,6 +160,9 @@ export default {
 </script>
 
 <style scoped>
+.vs-dialog-content {
+  backdrop-filter: saturate(180%) blur(15px);
+}
 .color-primary {
   color: #1373ab;
 }
