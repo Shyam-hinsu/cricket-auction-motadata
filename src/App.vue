@@ -40,7 +40,7 @@
 
         <input v-model="search" class="p-1 input mt-4" />
         <div
-          class="flex flex-1 flex-col overflow-auto mt-4 h-fit mb-4"
+          class="flex flex-1 flex-col overflow-hidden mt-4 h-fit mb-4"
           style="height: 90%"
         >
           <div
@@ -124,16 +124,10 @@
               @dragover="allowDropSeries($event, teams[0].name)"
             >
               <div
-                class="w-full h-full flex flex-col items-center justify-center"
+                class="w-full h-full"
                 @drop="dropSeries($event, teams[0].name)"
               >
-                TEAM {{ teams[0].name }}
-                <br />
-                Drag Player
-                <br />
-                Total Points : 5000
-                <br />
-                Remaining Points : 500
+                <TeamDetails :team="teams[0].name" :all-player="players" />
               </div>
             </div>
           </div>
@@ -148,16 +142,10 @@
               @dragover="allowDropSeries($event, teams[1].name)"
             >
               <div
-                class="w-full h-full flex flex-col items-center justify-center"
+                class="w-full h-full"
                 @drop="dropSeries($event, teams[1].name)"
               >
-                TEAM {{ teams[1].name }}
-                <br />
-                Drag Player
-                <br />
-                Total Points : 5000
-                <br />
-                Remaining Points : 500
+                <TeamDetails :team="teams[1].name" :all-player="players" />
               </div>
             </div>
             <div
@@ -183,16 +171,10 @@
               @dragover="allowDropSeries($event, teams[2].name)"
             >
               <div
-                class="w-full h-full flex flex-col items-center justify-center"
+                class="w-full h-full"
                 @drop="dropSeries($event, teams[2].name)"
               >
-                TEAM {{ teams[2].name }}
-                <br />
-                Drag Player
-                <br />
-                Total Points : 5000
-                <br />
-                Remaining Points : 500
+                <TeamDetails :team="teams[2].name" :all-player="players" />
               </div>
             </div>
           </div>
@@ -204,16 +186,10 @@
               @dragover="allowDropSeries($event, teams[3].name)"
             >
               <div
-                class="w-full h-full flex flex-col items-center justify-center"
+                class="w-full h-full"
                 @drop="dropSeries($event, teams[3].name)"
               >
-                TEAM {{ teams[3].name }}
-                <br />
-                Drag Player
-                <br />
-                Total Points : 5000
-                <br />
-                Remaining Points : 500
+                <TeamDetails :team="teams[3].name" :all-player="players" />
               </div>
             </div>
             <div
@@ -223,16 +199,10 @@
               @dragover="allowDropSeries($event, teams[4].name)"
             >
               <div
-                class="w-full h-full flex flex-col items-center justify-center"
+                class="w-full h-full"
                 @drop="dropSeries($event, teams[4].name)"
               >
-                TEAM {{ teams[4].name }}
-                <br />
-                Drag Player
-                <br />
-                Total Points : 5000
-                <br />
-                Remaining Points : 500
+                <TeamDetails :team="teams[4].name" :all-player="players" />
               </div>
             </div>
           </div>
@@ -282,6 +252,7 @@ import Header from "./components/Header.vue";
 import playerListModel from "./components/PlayerListModel.vue";
 import PlayerForm from "./components/playerForm.vue";
 import playerSelectionModel from "./components/playerSelectionModel.vue";
+import TeamDetails from "./components/TeamDetails.vue";
 
 export default {
   name: "App",
@@ -290,6 +261,7 @@ export default {
     playerListModel,
     PlayerForm,
     playerSelectionModel,
+    TeamDetails,
   },
 
   data() {

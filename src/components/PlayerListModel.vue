@@ -9,29 +9,39 @@
   >
     <template #header>
       <h4 class="not-margin">
-        <b> {{ teamDetailsFor }}</b>
+        <b class="text-rose-900 text-xl font-bold"> {{ teamDetailsFor }}</b>
       </h4>
     </template>
     <div class="center examplex">
-      <vs-table striped>
+      <vs-table>
         <template #thead>
           <vs-tr>
-            <vs-th sort> Name </vs-th>
-            <vs-th sort> Team </vs-th>
-            <vs-th sort> Point </vs-th>
+            <vs-th sort>
+              <h1 class="text-lg font-bold">Name</h1>
+            </vs-th>
+            <vs-th sort v-if="teamDetailsFor === 'All Players'">
+              <h1 class="text-lg font-bold">Team</h1>
+            </vs-th>
+            <vs-th sort> <h1 class="text-lg font-bold">Point</h1> </vs-th>
             <vs-th v-if="teamDetailsFor !== 'All Players'"> </vs-th>
           </vs-tr>
         </template>
         <template #tbody>
           <vs-tr :key="i" v-for="(player, i) in players" :data="player">
             <vs-td>
-              {{ player.name }}
+              <h1 class="text-lg font-bold" style="color: #1373ab">
+                {{ player.name }}
+              </h1>
+            </vs-td>
+            <vs-td v-if="teamDetailsFor === 'All Players'">
+              <h1 class="text-lg font-bold" style="color: #ab5213">
+                {{ player.team }}
+              </h1>
             </vs-td>
             <vs-td>
-              {{ player.team }}
-            </vs-td>
-            <vs-td>
-              {{ player.point }}
+              <h1 class="text-lg font-bold" style="color: #13ab99">
+                {{ player.point }}
+              </h1>
             </vs-td>
             <vs-td v-if="teamDetailsFor !== 'All Players'">
               <font-awesome-icon
@@ -103,6 +113,11 @@ export default {
 
 <style>
 .vs-dialog {
-  /* background-color: rgb(17, 17, 17) !important; */
+  /* background-color: #1e2023 !important;
+  color: white !important; */
+}
+
+.vs-dialog-content .vs-dialog--scroll .vs-dialog__content {
+  max-height: 85%;
 }
 </style>
