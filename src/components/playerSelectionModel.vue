@@ -44,11 +44,16 @@
               </h4>
 
               <h4 class="text-2xl font-bold">
-                Expertise :
-                <span>
-                  <div v-for="e in (player || {}).expertise" :key="e">
+                <span
+                  >Expertise :
+
+                  <span
+                    v-for="e in (player || {}).expertise"
+                    :key="e"
+                    class="text-xl"
+                  >
                     {{ e }}
-                  </div>
+                  </span>
                 </span>
               </h4>
 
