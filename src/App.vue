@@ -18,12 +18,19 @@
               Used Points : {{ usedPlayerPoints }}</span
             >
           </div>
+          <!-- <div class="flex flex-col h-full justify-between"> -->
+          <!-- <font-awesome-icon
+              icon="fa-solid fa-square-plus"
+              class="color-primary text-5xl cursor-pointer"
+              @click="tglToadd = true"
+            /> -->
+          <!-- <font-awesome-icon
+              icon="fa-solid fa-square-plus"
+              class="text-red-900 text-5xl cursor-pointer"
+              @click="addAllRecord"
+            /> -->
+          <!-- </div> -->
 
-          <font-awesome-icon
-            icon="fa-solid fa-square-plus"
-            class="color-primary text-5xl cursor-pointer"
-            @click="tglToadd = true"
-          />
           <div class="flex flex-col h-full justify-between">
             <font-awesome-icon
               icon="fa-solid fa-users"
@@ -40,7 +47,7 @@
 
         <input v-model="search" class="p-1 input mt-4" />
         <div
-          class="flex flex-1 flex-col overflow-hidden mt-4 h-fit mb-4"
+          class="flex flex-1 flex-col overflow-auto mt-4 h-fit mb-4"
           style="height: 90%"
         >
           <div
@@ -230,6 +237,35 @@
       @select-player-in-team="selectPlayerInTeam"
       @close="closePlayerSelectionModel"
     />
+
+    <vs-dialog
+      width="450px"
+      not-center
+      v-model="isConfrimDelete"
+      @close="cancelConfrim"
+    >
+      <!-- <template #header>
+        <h4 class="not-margin"><b>Action Delete</b></h4>
+      </template> -->
+
+      <template #footer>
+        <div class="con-footer flex justify-between items-center">
+          <div class="con-content ml-2">
+            <p>Are You Sure To Delete Player</p>
+          </div>
+          <div class="flex">
+            <vs-button
+              @click="confrimDelete"
+              class="bg-red-800"
+              style="background-color: red !importent"
+            >
+              Ok
+            </vs-button>
+            <vs-button @click="cancelConfrim"> Cancel </vs-button>
+          </div>
+        </div>
+      </template>
+    </vs-dialog>
   </div>
 </template>
 
@@ -253,6 +289,8 @@ import playerListModel from "./components/PlayerListModel.vue";
 import PlayerForm from "./components/playerForm.vue";
 import playerSelectionModel from "./components/playerSelectionModel.vue";
 import TeamDetails from "./components/TeamDetails.vue";
+
+import players from "./allPlayerData";
 
 export default {
   name: "App",
@@ -282,6 +320,7 @@ export default {
         name: "five",
       },
     ];
+
     return {
       search: "",
       dragedPlayer: undefined,
@@ -290,20 +329,16 @@ export default {
       notesCollectionRef: undefined,
 
       getNotesSnapshots: undefined,
-      players: [
-        // { id: 1, name: "shyam", point: 500, star: 1 },
-        // { id: 2, name: "hinsu", point: 500, star: 2 },
-        // { id: 3, name: "mukesh", point: 500, star: 3 },
-        // { id: 4, name: "jika", point: 500, star: 4 },
-        // { id: 5, name: "jinu", point: 500, star: 3 },
-        // { id: 6, name: "jin", point: 500, star: 1 },
-      ],
+      players: [],
       tglToadd: false,
       formOpen: true,
       value7: "",
       options: 1,
       abandonPlayer: [],
       isOpenPlayerSeletionModel: false,
+
+      playersRowData: players,
+      isConfrimDelete: false,
     };
   },
   created() {
@@ -334,15 +369,19 @@ export default {
             let player = {
               id: doc.id,
               name: doc.data().name,
-              point: doc.data().point,
-              run: doc.data().run,
-              wicket: doc.data().point,
+              department: doc.data().department,
+              email: doc.data().email,
+              rate: doc.data().rate,
+              expertise: doc.data().expertise,
+              matches: doc.data().matches,
+              runs: doc.data().runs,
+              wickets: doc.data().wickets,
               team: doc.data().team,
+              point: doc.data().point,
             };
             players.unshift(player);
           });
           this.players = players;
-          // this.isNotesLoaded = false;
         },
         (error) => {
           console.log(error);
@@ -361,9 +400,19 @@ export default {
     },
 
     async deletePalyer(id) {
-      await deleteDoc(doc(this.notesCollectionRef, id));
+      this.confrimToDeletId = id;
+      this.isConfrimDelete = true;
     },
 
+    async confrimDelete() {
+      await deleteDoc(doc(this.notesCollectionRef, this.confrimToDeletId));
+      this.confrimToDeletId = undefined;
+      this.isConfrimDelete = false;
+    },
+    cancelConfrim() {
+      this.confrimToDeletId = undefined;
+      this.isConfrimDelete = false;
+    },
     showTeamInformation(t) {
       this.teamDetailsFor = t;
       this.active = true;
@@ -428,6 +477,7 @@ export default {
       const washingtonRef = doc(this.notesCollectionRef, id);
       await updateDoc(washingtonRef, {
         team: null,
+        point: 500,
       });
     },
     async selectPlayerInTeam(data) {
@@ -472,6 +522,26 @@ export default {
 
       this.dragedPlayer = undefined;
       this.isOpenPlayerSeletionModel = false;
+    },
+    addAllRecord() {
+      this.playersRowData.forEach(async (eachPlayers) => {
+        await setDoc(doc(this.notesCollectionRef, uuidv4()), {
+          name: eachPlayers.Name,
+          department: eachPlayers.Department,
+          email: eachPlayers.Email,
+          rate: eachPlayers["Please Rate your Expertise"],
+          expertise: eachPlayers["Please choose your expertise"]
+            .split(";")
+            .filter((e) => e !== ""),
+
+          matches:
+            eachPlayers["Please specify - Total Matches played till date"],
+
+          runs: eachPlayers["Please specify - Total runs scored till date"],
+          wickets: eachPlayers["Please specify - Total wickets taken"],
+          point: 500,
+        });
+      });
     },
   },
   computed: {

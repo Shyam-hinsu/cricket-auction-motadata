@@ -2,7 +2,12 @@
   <div class="h-full w-full flex flex-col justify-between p-2">
     <h1 class="self-center">{{ team }}</h1>
     <div style="height: 70%" class="flex justify-center items-center mb-2">
-      <img src="teamlogo.png" alt="" style="height: 100%" class="rounded-lg" />
+      <img
+        :src="`${team}.png`"
+        alt=""
+        style="height: 100%"
+        class="rounded-lg"
+      />
     </div>
 
     <div class="flex justify-around" style="border-top: 1px dashed !important">

@@ -10,17 +10,18 @@
     <div style="min-height: 50vh" class="flex" v-if="!isAllPlayerSelected">
       <div style="height: 50vh; width: 50vh">
         <img
-          src="shyam.jpg"
+          :src="`players-photos/${(player || {}).name}.jpg`"
           alt=""
           style="height: inherit; width: inherit; border-radius: 20px"
         />
 
         <div class="">
-          <font-awesome-icon icon="fa-solid fa-star" class="text-yellow-400" />
-          <font-awesome-icon icon="fa-solid fa-star" class="text-yellow-400" />
-          <font-awesome-icon icon="fa-solid fa-star" class="text-yellow-400" />
-          <font-awesome-icon icon="fa-solid fa-star" class="text-yellow-400" />
-          <font-awesome-icon icon="fa-solid fa-star" class="text-yellow-400" />
+          <font-awesome-icon
+            icon="fa-solid fa-star"
+            class="text-yellow-400"
+            v-for="star in (player || {}).rate"
+            :key="star"
+          />
         </div>
       </div>
 
@@ -32,8 +33,28 @@
           >
             <div>
               <h1 class="text-2xl font-extrabold">{{ (player || {}).name }}</h1>
-              <h4 class="text-2xl font-bold">Wickets: 10</h4>
-              <h4 class="text-2xl font-bold">Runs: 10</h4>
+              <h4 class="text-2xl font-bold">
+                Matches: {{ (player || {}).matches }}
+              </h4>
+              <h4 class="text-2xl font-bold">
+                Wickets:{{ (player || {}).wickets }}
+              </h4>
+              <h4 class="text-2xl font-bold">
+                Runs: {{ (player || {}).runs }}
+              </h4>
+
+              <h4 class="text-2xl font-bold">
+                Expertise :
+                <span>
+                  <div v-for="e in (player || {}).expertise" :key="e">
+                    {{ e }}
+                  </div>
+                </span>
+              </h4>
+
+              <h4 class="text-2xl font-bold">
+                Department: {{ (player || {}).department }}
+              </h4>
             </div>
 
             <div class="flex">
