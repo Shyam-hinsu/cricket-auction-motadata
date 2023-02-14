@@ -64,7 +64,7 @@
 
             <div class="flex">
               <vs-select
-                v-if="!isDraged"
+                v-if="!isDraged || (player || {}).seePlayer"
                 placeholder="Select Team"
                 v-model="formData.team"
                 class="mr-4"
@@ -91,10 +91,13 @@
           <vs-button
             dark
             shadow
-            class="absolute float-right right-0"
+            class="absolute float-right right-0 bg-green-900"
             @click="selectPlayerInTeam"
           >
-            Select Player
+            <font-awesome-icon
+              icon="fa-solid fa-money-check-dollar"
+              class="mr-2 text-xl"
+            />Buy Player
           </vs-button>
         </div>
       </div>

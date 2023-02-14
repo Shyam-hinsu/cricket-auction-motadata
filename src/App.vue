@@ -64,11 +64,14 @@
                 class="cursor-pointer text-red-800"
                 @click="deletePalyer(p.id)"
               />
-
+              <font-awesome-icon
+                class="cursor-pointer color-primary mx-4"
+                icon="fa-solid fa-clipboard-user"
+                @click="seeUser(p)"
+              />
               <span
                 variant="transparent"
                 class="cursor-move"
-                style="padding: 3px 20px"
                 :shadow="false"
                 shape="circle"
                 draggable="true"
@@ -87,7 +90,7 @@
         <div class="flex justify-between w-full">
           <h1 class="color-primary font-bold">Teams</h1>
           <font-awesome-icon
-            icon="fa-solid fa-square-plus"
+            icon="fa-solid fa-gear"
             class="color-primary text-xl cursor-pointer"
           />
         </div>
@@ -378,6 +381,7 @@ export default {
               wickets: doc.data().wickets,
               team: doc.data().team,
               point: doc.data().point,
+              basePoint: doc.data().basePoint,
             };
             players.unshift(player);
           });
@@ -433,17 +437,17 @@ export default {
       if (this.dragedPlayer) {
         e.preventDefault();
 
-        let index = this.players.findIndex(
-          (item) => item.id === this.dragedPlayer.id
-        );
-        this.players = [
-          ...this.players.slice(0, index),
-          {
-            ...this.players[index],
-            team: t,
-          },
-          ...this.players.slice(index + 1),
-        ];
+        // let index = this.players.findIndex(
+        //   (item) => item.id === this.dragedPlayer.id
+        // );
+        // this.players = [
+        //   ...this.players.slice(0, index),
+        //   {
+        //     ...this.players[index],
+        //     team: t,
+        //   },
+        //   ...this.players.slice(index + 1),
+        // ];
 
         this.dragedPlayer = {
           ...this.dragedPlayer,
@@ -539,9 +543,14 @@ export default {
 
           runs: eachPlayers["Please specify - Total runs scored till date"],
           wickets: eachPlayers["Please specify - Total wickets taken"],
-          point: 500,
+          basePoint: Number(eachPlayers["Please Rate your Expertise"]) * 100,
+          point: Number(eachPlayers["Please Rate your Expertise"]) * 100,
         });
       });
+    },
+    seeUser(player) {
+      this.dragedPlayer = { ...player, seePlayer: true };
+      this.isOpenPlayerSeletionModel = true;
     },
   },
   computed: {

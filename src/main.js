@@ -23,6 +23,9 @@ import { faDiceD20 } from "@fortawesome/free-solid-svg-icons";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import { faGroupArrowsRotate } from "@fortawesome/free-solid-svg-icons";
+import { faClipboardUser } from "@fortawesome/free-solid-svg-icons";
+import { faMoneyCheckDollar } from "@fortawesome/free-solid-svg-icons";
+import { faGear } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
   faUserSecret,
@@ -33,7 +36,10 @@ library.add(
   faDiceD20,
   faStar,
   faUsers,
-  faGroupArrowsRotate
+  faGroupArrowsRotate,
+  faClipboardUser,
+  faMoneyCheckDollar,
+  faGear
 );
 
 Vue.component("font-awesome-icon", FontAwesomeIcon);
