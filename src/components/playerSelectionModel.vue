@@ -91,7 +91,7 @@
           <vs-button
             dark
             shadow
-            class="absolute float-right right-0 bg-green-900"
+            class="absolute float-right right-0"
             @click="selectPlayerInTeam"
           >
             <font-awesome-icon
